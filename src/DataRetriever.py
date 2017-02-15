@@ -23,7 +23,6 @@ class DataRetriever(object):
 
     def _record_(self):
         controller = Leap.Controller()
-        listener = RawDataListener()
 
         r = raw_input('Enter label: ')
         # TODO: Generalize labels to more than just letters
@@ -31,6 +30,7 @@ class DataRetriever(object):
             print('Invalid label')
             return
         self.label = r
+        listener = RawDataListener(self.label)
 
         # Create appropriate file
         i = 0

@@ -9,14 +9,12 @@ import Leap
 from RawDataListener import RawDataListener
 
 
-class DataRetriever(object):
+class DataRecorder(object):
     """
     Read config format from json file and output recorded data to json files
     """
 
     def __init__(self, config_fp=None, write_to_file=False):
-        # with open(config_fp) as config:
-        #     self.config = json.load(config)
         self.data = None
         self.label = None
         self.file_template = root_dir + '/samples/' + 'sample_{}_{}.json'

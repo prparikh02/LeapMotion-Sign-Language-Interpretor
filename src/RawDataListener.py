@@ -47,8 +47,8 @@ class RawDataListener(Leap.Listener):
         coords = ['x', 'y', 'z']
 
         frame_data = {}
-        # frame_data['id'] = frame.id
-        # frame_data['timestamp'] = frame.timestamp
+        frame_data['id'] = frame.id
+        frame_data['timestamp'] = frame.timestamp
         frame_data['num_hands'] = len(frame.hands)
         frame_data['num_fingers'] = len(frame.fingers)
         frame_data['hands'] = {}

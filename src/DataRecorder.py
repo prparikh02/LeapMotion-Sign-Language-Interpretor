@@ -9,20 +9,19 @@ import Leap
 from RawDataListener import RawDataListener
 
 
-class DataRetriever(object):
+class DataRecorder(object):
     """
     Read config format from json file and output recorded data to json files
     """
 
     def __init__(self, config_fp=None, write_to_file=False):
-        # with open(config_fp) as config:
-        #     self.config = json.load(config)
         self.data = None
         self.label = None
         self.file_template = root_dir + '/samples/' + 'sample_{}_{}.json'
 
     def _record_(self):
         controller = Leap.Controller()
+        listener = RawDataListener()
 
         r = raw_input('Enter label: ')
         # TODO: Generalize labels to more than just letters
@@ -30,7 +29,6 @@ class DataRetriever(object):
             print('Invalid label')
             return
         self.label = r
-        listener = RawDataListener(self.label)
 
         # Create appropriate file
         i = 0

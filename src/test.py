@@ -1,4 +1,4 @@
-from DataRetriever import DataRetriever
+from DataRecorder import DataRecorder
 
-dr = DataRetriever()
+dr = DataRecorder()
 dr.begin_recording()

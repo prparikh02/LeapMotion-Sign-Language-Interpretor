@@ -4,6 +4,18 @@ import operator
 import pdb
 
 
+"""
+Sample usage:
+
+opt = DataParserOpt()
+myOpt = DataParserOpt(both=True, only_right=False, only_left=False)
+myDataReader = DataReader(
+    './src/mapping.txt', './samples/sample_b_1.json', myOpt)
+a, y = myDataReader.extract_features()
+
+"""
+
+
 class DataReader(object):
     """
     Class that parse json file to numpy array, with some options
@@ -64,13 +76,14 @@ class DataReader(object):
         # keep track of non zero frames
         nnz_idx = []
         y = ['' for i in xrange(num_frames)]
-
         for frame_idx in xrange(num_frames):
+            # print D[frame_idx]['num_hands'], D[frame_idx]['num_fingers']
             if D[frame_idx]['num_hands'] != 0 and D[frame_idx]['num_fingers'] % 5 == 0:
                 nnz_idx.append(frame_idx)
+                # print D[frame_idx]
             for feat_idx, feat in enumerate(feature_list):
-                if feat_idx in range(186, 189):
-                    print feat
+                # if feat_idx in range(186, 189):
+                    # print feat
                 feat_keys = feat.split('.')[1:]
                 try:
                     val = reduce(operator.getitem, feat_keys, D[frame_idx])
@@ -78,8 +91,8 @@ class DataReader(object):
                     y[frame_idx] = D[frame_idx]['label']
                 except KeyError, e:
                     pass
-            break
         return self._filter_(nnz_idx, A, y)
+        # return A, y
 
 
 class DataParserOpt(object):
@@ -103,5 +116,5 @@ class DataParserOpt(object):
         self.only_left = only_left
         # self.only_complete = only_complete
         self.both = both
-        assert self.only_left is not self.only_right
+        assert not (self.only_left and self.only_right)
         assert self.both is not (self.only_left or self.only_right)

@@ -5,6 +5,7 @@ import math
 
 
 class DataSampler(object):
+
     def __init__(self, data, method, *method_args):
         self.data = data  # np matrix; m samples, n features
         self.data_length = data.shape[0]
@@ -12,11 +13,12 @@ class DataSampler(object):
         self.method_args = method_args
 
         if self.method == 'uniform_sampling':
-            self.__class__.__call__ = self.uniform_sampling(*(self.method_args))
+            self.__class__.__call__ = self.uniform_sampling(
+                *(self.method_args))
         elif self.method == 'random_sampling':
             self.__class__.__call__ = self.random_sampling(*(self.method_args))
 
-    def uniform_sampling(self, method = 'rate', value = None):
+    def uniform_sampling(self, method='rate', value=None):
         """
         Inputs: data - an m, n dimension matrix (m samples, n features)
                 method - a string param which specifies the type of uniform sampling
@@ -37,12 +39,12 @@ class DataSampler(object):
         if method == 'rate' and value > 0 and isinstance(value, (int, long)):
             return self.data[0::value]
         elif method == 'num_frames' and value > 0 and isinstance(value, (int, long)):
-            new_data = self.data[0::int(math.floor(self.data_length/value))]
+            new_data = self.data[0::int(math.floor(self.data_length / value))]
             if self.data_length > value:
                 new_data = new_data[0:value]
-            return new_data            
+            return new_data
 
-    def random_sampling(self, num_frames = None):
+    def random_sampling(self, num_frames=None):
         """
         Inputs: data - an m, n dimension matrix (m samples, n features)
                 num_frames - if num_frames < m, num_frames randomly sampled frames are complied without replacement

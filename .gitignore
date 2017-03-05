@@ -1,8 +1,5 @@
 *.pyc
 venv/
-<<<<<<< HEAD
 *.json
-
-=======
-sample_*.json
->>>>>>> 264d23e3cd08821c6936ceabbdb14bb3f39a3d72
+*.npy
+*.csv

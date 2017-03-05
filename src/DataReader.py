@@ -80,6 +80,8 @@ class DataReader(object):
             if D[frame_idx]['num_hands'] != 0 and D[frame_idx]['num_fingers'] % 5 == 0:
                 nnz_idx.append(frame_idx)
             for feat_idx, feat in enumerate(feature_list):
+                if feat_idx in range(186, 189):
+                    print feat
                 feat_keys = feat.split('.')[1:]
                 try:
                     val = reduce(operator.getitem, feat_keys, D[frame_idx])
@@ -87,6 +89,7 @@ class DataReader(object):
                     y[frame_idx] = D[frame_idx]['label']
                 except KeyError, e:
                     pass
+
         return self._filter_(nnz_idx, A, y)
 
 

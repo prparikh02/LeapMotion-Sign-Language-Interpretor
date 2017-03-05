@@ -77,13 +77,9 @@ class DataReader(object):
         nnz_idx = []
         y = ['' for i in xrange(num_frames)]
         for frame_idx in xrange(num_frames):
-            # print D[frame_idx]['num_hands'], D[frame_idx]['num_fingers']
             if D[frame_idx]['num_hands'] != 0 and D[frame_idx]['num_fingers'] % 5 == 0:
                 nnz_idx.append(frame_idx)
-                # print D[frame_idx]
             for feat_idx, feat in enumerate(feature_list):
-                # if feat_idx in range(186, 189):
-                    # print feat
                 feat_keys = feat.split('.')[1:]
                 try:
                     val = reduce(operator.getitem, feat_keys, D[frame_idx])
@@ -92,7 +88,6 @@ class DataReader(object):
                 except KeyError, e:
                     pass
         return self._filter_(nnz_idx, A, y)
-        # return A, y
 
 
 class DataParserOpt(object):

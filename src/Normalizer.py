@@ -9,19 +9,19 @@ class Normalizer(object):
     
     myNorm = Normalizer()
     kienVec = np.load('testdata.npy')
-    normed = myNorm.affine(kienVec)
+    normed = myNorm.affine(kienVec, file)
 	"""
 
 	# do an affine normalization of the x, y, z coordinated on the hand by moving the palm to the origin 
-	def affine(self, numpyArrayFromKien):
+	def affine(self, numpyArrayFromKien, mapFile):
 		"""
 		This function does an affine translation of the hand by centering the palm at the origin.
-		Input: a numpyArrayFromKien
-		Output: a numpy Array
+		Input: a numpyArrayFromKien and a path to a file with the lines defining the elements of the numpy array
+		Output: an adjusted numpy Array
 		"""
 
 		# open the file
-		mapper  = open('/Users/nicholasfrost/Documents/Capstone/LeapMotion-Sign-Language-Interpretor/src/mapping.txt', 'r')
+		mapper  = open(mapFile, 'r')
 
 		# determine how many lines are in the file
 		for i, l in enumerate(mapper):
@@ -39,7 +39,7 @@ class Normalizer(object):
 		# variables to hold vector location of palm position 
 		leftx = lefty = leftz = rightx = righty = rightz = 0
 
-		mapper = open('/Users/nicholasfrost/Documents/Capstone/LeapMotion-Sign-Language-Interpretor/src/mapping.txt', 'r')
+		mapper  = open(mapFile, 'r')
 
 		# note which lines have x, y, z at the end
 		for j, line in enumerate(mapper):

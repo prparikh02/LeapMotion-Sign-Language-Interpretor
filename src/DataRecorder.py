@@ -21,14 +21,14 @@ class DataRecorder(object):
 
     def _record_(self):
         controller = Leap.Controller()
-        listener = RawDataListener()
 
         r = raw_input('Enter label: ')
         # TODO: Generalize labels to more than just letters
         if len(r) != 1 or not r.isalpha():
             print('Invalid label')
-            return
+            return None
         self.label = r
+        listener = RawDataListener(self.label)
 
         # Create appropriate file
         i = 0

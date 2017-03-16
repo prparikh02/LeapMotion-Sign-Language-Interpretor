@@ -19,9 +19,10 @@ class RawDataListener(Leap.Listener):
     finger_names = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']
     bone_names = ['Metacarpal', 'Proximal', 'Intermediate', 'Distal']
 
-    def __init__(self):
+    def __init__(self, label):
         super(RawDataListener, self).__init__()
-        self.frames = {}
+        self.frames = []
+        self.label = label
 
     def on_init(self, controller):
         print('RawDataListener Initialized')
@@ -46,6 +47,7 @@ class RawDataListener(Leap.Listener):
 
         frame_data = {}
         frame_data['id'] = frame.id
+        frame_data['label'] = self.label
         frame_data['timestamp'] = frame.timestamp
         frame_data['num_hands'] = len(frame.hands)
         frame_data['num_fingers'] = len(frame.fingers)
@@ -127,7 +129,8 @@ class RawDataListener(Leap.Listener):
 
             frame_data['hands'][hand_type] = hand_data
 
-        self.frames[frame.timestamp] = frame_data
+        # self.frames[frame.timestamp] = frame_data
+        self.frames.append(frame_data)
 
     def get_data(self):
         return self.frames

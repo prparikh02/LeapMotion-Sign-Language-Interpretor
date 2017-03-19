@@ -1,126 +1,72 @@
+import Constants
+import numpy as np
+import re
+
+
 class Normalizer(object):
-	"""
-	This class will normalize the data
-    
-    Sample Use:
-    
-    import numpy as np
-    from Normalizer import Normalizer
-    
-    myNorm = Normalizer()
-    kienVec = np.load('testdata.npy')
-    normed = myNorm.affine(kienVec, file)
-	"""
+    """
+    This class offers various methods to normalize the data()
 
-	# do an affine normalization of the x, y, z coordinated on the hand by moving the palm to the origin 
-	def affine(self, numpyArrayFromKien, mapFile):
-		"""
-		This function does an affine translation of the hand by centering the palm at the origin.
-		Input: a numpyArrayFromKien and a path to a file with the lines defining the elements of the numpy array
-		Output: an adjusted numpy Array
-		"""
+    Sample use:
+    my_norm = Normalizer()
+    X = np.load('data.npy')
+    X_norm = my_norm.affine(X, out_file)
+    """
 
-		# open the file
-		mapper  = open(mapFile, 'r')
+    def affine_translation(self, X, map_file='mapping.txt'):
+        """
+        Performs affine translation of the hand coordinates by centering the
+            palm at the origin.
+        Input -
+            X: Numpy array
+            map_file: file containing feature mapping of input array X
+        Output -
+            X_aff: affinely translation of the input array, X
+        """
 
-		# determine how many lines are in the file
-		for i, l in enumerate(mapper):
-			pass
-		file_len = i+1
+        try:
+            with open(map_file, 'r') as f:
+                feature_map = f.read()
+        except IOError:
+            print('Could not find or open map file.')
+            raise
 
-		# initialize vectors for determining which lines end in x, y, z
-		xs_left = [0] * file_len
-		ys_left = [0] * file_len
-		zs_left = [0] * file_len
-		xs_right = [0] * file_len
-		ys_right = [0] * file_len 
-		zs_right = [0] * file_len
+        features = [feat.strip() for feat in feature_map.splitlines()]
 
-		# variables to hold vector location of palm position 
-		leftx = lefty = leftz = rightx = righty = rightz = 0
+        palm_template = 'frame.hands.{}.palm_pos.{}'
+        hands = ['left', 'right']
+        pos = ['x', 'y', 'z']
 
-		mapper  = open(mapFile, 'r')
+        pos_bins = {key: [] for key in pos}
 
-		# note which lines have x, y, z at the end
-		for j, line in enumerate(mapper):
-			line = line.rstrip('\n')
-			length = len(line)
-			if (line[12] == 'l'):
-				if (line[length-1] == 'x'):
-					xs_left[j] = 1
-				elif (line[length-1] == 'y'):
-					ys_left[j] = 1
-				elif (line[length-1] == 'z'):
-					zs_left[j] = 1
+        pos_pattern = re.compile("^.*(\.[x-z])$")
+        for idx, feat in enumerate(features):
+            # discount non-positional (x,y,z)features
+            if not pos_pattern.match(feat.strip()):
+                continue
+            pos_bins[feat[-1]].append(idx)
 
-			else:
-				if (line[length-1] == 'x'):
-					xs_right[j] = 1
-				elif (line[length-1] == 'y'):
-					ys_right[j] = 1
-				elif (line[length-1] == 'z'):
-					zs_right[j] = 1
+        # indices of left and right palm coordinates
+        left_palm_idx = {
+            k: features.index(palm_template.format('left', k)) for k in pos
+        }
+        right_palm_idx = {
+            k: features.index(palm_template.format('right', k)) for k in pos
+        }
 
-			# record vector location of palm parameters 
-			if (line == 'frame.hands.left.palm_pos.x'):
-				leftx = j
-			elif (line == 'frame.hands.left.palm_pos.y'):
-				lefty = j
-			elif (line == 'frame.hands.left.palm_pos.z'):
-				leftz = j	
+        X_aff = np.copy(X)
+        # for each frame
+        for x in X_aff:
+            # for each position coordinate (x, y, z)
+            for k, indices in pos_bins.iteritems():
+                # obtain coordinate k for appropriate hand's palm position
+                diff_k_left = x[left_palm_idx[k]]
+                diff_k_right = x[right_palm_idx[k]]
+                # for each occurrence of coordinate k
+                for idx in indices:
+                    if idx < Constants.NUM_FEATURES_PER_HAND:
+                        x[idx] -= diff_k_left
+                    else:
+                        x[idx] -= diff_k_right
 
-			elif (line == 'frame.hands.right.palm_pos.x'):
-				rightx = j
-			elif (line == 'frame.hands.right.palm_pos.y'):
-				righty = j
-			elif (line == 'frame.hands.right.palm_pos.z'):
-				rightz = j
-
-		# close the file
-		mapper.close()
-
-		# go through every row of matrix
-		# find amount to shift each x, y, z and conduct the affine transformation 
-		for row in numpyArrayFromKien:
-			
-			# record the actual palm location of the left hand
-			xDiff_Left = row[leftx]
-			yDiff_Left = row[lefty]
-			zDiff_Left = row[leftz]
-
-			# record the actual palm location of the right hand
-			xDiff_Right = row[rightx]
-			yDiff_Right = row[righty]
-			zDiff_Right = row[rightz]		
-
-			# loop through each row of the matrix
-			for i, val in enumerate(row):
-				if (xs_left[i] == 1):
-					row[i] -= xDiff_Left
-				elif (ys_left[i] == 1):
-					row[i] -= yDiff_Left
-				elif (zs_left[i] == 1):
-					row[i] -= zDiff_Left
-
-				elif (xs_right[i] == 1):
-					row[i] -= xDiff_Right
-				elif (ys_right[i] == 1):
-					row[i] -= yDiff_Right
-				elif (zs_right[i] == 1):
-					row[i] -= zDiff_Right
-
-		return numpyArrayFromKien
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        return X_aff

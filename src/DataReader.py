@@ -1,3 +1,4 @@
+import Constants
 import json
 import numpy as np
 import operator
@@ -39,19 +40,18 @@ class DataReader(object):
         Called when self.opt is not None
         indx: index of valid frames.
         """
-        # number of features per hand
-        HAND_LENGTH = 186
         if self.opt is None:
             return A, y
 
         if self.opt.no_empty:
-            # pass
             A = A[nnz_idx, :]
-            y = [y[i] for i in nnz_idx]
-        if self.opt.only_left:
-            A = A[:, :HAND_LENGTH]
-        if self.opt.only_right:
-            A = A[:, HAND_LENGTH:]
+            y = y[nnz_idx]
+
+        # TODO: Defer feature mutation until the end of data transformation
+        # if self.opt.only_left:
+        #     A = A[:, :Constants.NUM_FEATURES_PER_HAND]
+        # if self.opt.only_right:
+        #     A = A[:, Constants.NUM_FEATURES_PER_HAND:]
         return A, y
 
     def extract_features(self):
@@ -59,7 +59,7 @@ class DataReader(object):
         Parse the JSON file and and place all samples as rows into a np array.
         Return feature array with corresponding label array
         """
-        # place features names in F
+        # place features names in feature_list
         with open(self.map_file) as f:
             feature_list = f.read().splitlines()
 
@@ -73,18 +73,20 @@ class DataReader(object):
 
         # numpy data array
         A = np.zeros((num_frames, num_feats))
+        y = np.empty(num_frames, dtype=object)
         # keep track of non zero frames
         nnz_idx = []
-        y = ['' for i in xrange(num_frames)]
+
         for frame_idx in xrange(num_frames):
-            if D[frame_idx]['num_hands'] != 0 and D[frame_idx]['num_fingers'] % 5 == 0:
+            frame = D[frame_idx]
+            if frame['num_hands'] != 0 and frame['num_fingers'] % 5 == 0:
                 nnz_idx.append(frame_idx)
             for feat_idx, feat in enumerate(feature_list):
                 feat_keys = feat.split('.')[1:]
                 try:
-                    val = reduce(operator.getitem, feat_keys, D[frame_idx])
+                    val = reduce(operator.getitem, feat_keys, frame)
                     A[frame_idx, feat_idx] = val
-                    y[frame_idx] = D[frame_idx]['label']
+                    y[frame_idx] = frame['label']
                 except KeyError, e:
                     pass
 
@@ -94,8 +96,8 @@ class DataReader(object):
 class DataParserOpt(object):
     """
     option object for DataReader object
-    no_empty: get rid of empty frames or frames with number of fingers not divisible by 5
-        , default to True
+    no_empty: get rid of empty frames or frames with number of fingers not
+        divisible by 5, default to True
     only_right: only get right hand data, default to True
     only_left: only get left hand data, default to False
     # only_complete: only get frames with complete 5 fingers, default to True
@@ -106,7 +108,8 @@ class DataParserOpt(object):
     # TODO: design decision... Could've been a dictionary. Not necessary a
     # class.
 
-    def __init__(self, no_empty=True, only_right=True, only_left=False, both=False):
+    def __init__(self, no_empty=True, only_right=True,
+                 only_left=False, both=False):
         self.no_empty = no_empty
         self.only_right = only_right
         self.only_left = only_left

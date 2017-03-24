@@ -108,12 +108,12 @@ class DataParserOpt(object):
     # TODO: design decision... Could've been a dictionary. Not necessary a
     # class.
 
-    def __init__(self, no_empty=True, only_right=True,
-                 only_left=False, both=False):
+    def __init__(self, no_empty=True, only_complete=True,
+                 only_right=True, only_left=False, both=False):
         self.no_empty = no_empty
         self.only_right = only_right
         self.only_left = only_left
-        # self.only_complete = only_complete
+        self.only_complete = only_complete
         self.both = both
         assert not (self.only_left and self.only_right)
         assert self.both is not (self.only_left or self.only_right)

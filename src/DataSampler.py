@@ -6,7 +6,7 @@ from types import *
 
 class DataSampler(object):
 
-    def __init__(self, data, labels, method, **kwargs):
+    def __init__(self, data, labels, method='uniform_rate', **kwargs):
         self.data = data
         self.labels = labels
         self.method, self.method_args = self._resolve_method(method, kwargs)
@@ -28,7 +28,8 @@ class DataSampler(object):
             if 'p' in method_args:
                 return self._prob, method_args['p']
             return self._prob, None
-        raise ValueError('No matching method found')
+        print ('Using default method: {}'.format('uniform_rate'))
+        return self._uniform_rate, None
 
     def _uniform_rate(self, k=None):
         if not k or k > self.data.shape[0]:

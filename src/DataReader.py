@@ -34,7 +34,7 @@ class DataReader(object):
         self.data_file = data_file
         self.opt = opt
 
-    def _filter_(self, nnz_idx, A, y):
+    def _filter(self, nnz_idx, A, y):
         """
         Internal function, not to be used externally.
         Called when self.opt is not None
@@ -90,7 +90,7 @@ class DataReader(object):
                 except KeyError, e:
                     pass
 
-        return self._filter_(nnz_idx, A, y)
+        return self._filter(nnz_idx, A, y)
 
 
 class DataParserOpt(object):

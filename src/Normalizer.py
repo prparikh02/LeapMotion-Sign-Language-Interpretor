@@ -13,7 +13,7 @@ class Normalizer(object):
     X_norm = my_norm.affine(X, out_file)
     """
 
-    def affine_translation(self, X, map_file='mapping.txt'):
+    def affine_translation(self, X, map_file=Constants.DEFAULT_MAPPING_FILE):
         """
         Performs affine translation of the hand coordinates by centering the
             palm at the origin.

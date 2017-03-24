@@ -9,34 +9,34 @@ class DataSampler(object):
     def __init__(self, data, labels, method, **kwargs):
         self.data = data
         self.labels = labels
-        self.method, self.method_args = self._resolve_method_(method, kwargs)
+        self.method, self.method_args = self._resolve_method(method, kwargs)
 
-    def _resolve_method_(self, method, method_args):
+    def _resolve_method(self, method, method_args):
         if method == 'uniform_rate':
             if 'k' in method_args:
-                return self._uniform_rate_, method_args['k']
-            return self._uniform_rate_, None
+                return self._uniform_rate, method_args['k']
+            return self._uniform_rate, None
         elif method == 'uniform_number':
             if 'N' in method_args:
-                return self._uniform_number_, method_args['N']
-            return self._uniform_number_, None
+                return self._uniform_number, method_args['N']
+            return self._uniform_number, None
         elif method == 'simple_random':
             if 'N' in method_args:
-                return self._simple_random_, method_args['N']
-            return self._simple_random_, None
+                return self._simple_random, method_args['N']
+            return self._simple_random, None
         elif method == 'prob':
             if 'p' in method_args:
-                return self._prob_, method_args['p']
-            return self._prob_, None
+                return self._prob, method_args['p']
+            return self._prob, None
         raise ValueError('No matching method found')
 
-    def _uniform_rate_(self, k=None):
+    def _uniform_rate(self, k=None):
         if not k or k > self.data.shape[0]:
-            return self._uniform_number_()
+            return self._uniform_number()
         assert type(k) is IntType, 'k is not an integer: {}'.format(k)
         return self.data[::k], self.labels[::k]
 
-    def _uniform_number_(self, N=None):
+    def _uniform_number(self, N=None):
         """
         Discouraged from because if N does not divide number of samples
             nicely, the sampling is heavily skewed
@@ -57,7 +57,7 @@ class DataSampler(object):
         # ensure that at most N samples are taken if N does not divide nicely
         return self.data[::k][:N], self.labels[::k][:N]
 
-    def _simple_random_(self, N=None):
+    def _simple_random(self, N=None):
         num_frames = self.data.shape[0]
         if not N or N > num_frames:
             N = int(np.floor(
@@ -68,7 +68,7 @@ class DataSampler(object):
         idx = np.sort(np.random.choice(xrange(num_frames), N, replace=False))
         return self.data[idx], self.labels[idx]
 
-    def _prob_(self, p=None):
+    def _prob(self, p=None):
         if not p:
             p = Constants.DEFAULT_SAMPLE_PERCENTAGE
         assert 0.0 < p < 1.0, 'p must be in between [0.0, 1.0]: {}'.format(p)

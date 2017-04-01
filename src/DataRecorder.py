@@ -15,11 +15,10 @@ class DataRecorder(object):
     """
 
     def __init__(self, config_fp=None, write_to_file=False):
-        self.data = None
         self.label = None
         self.file_template = root_dir + '/samples/' + 'sample_{}_{}.json'
 
-    def _record_(self):
+    def _record(self):
         controller = Leap.Controller()
 
         r = raw_input('Enter label: ')
@@ -30,12 +29,6 @@ class DataRecorder(object):
         self.label = r
         listener = RawDataListener(self.label)
 
-        # Create appropriate file
-        i = 0
-        while os.path.exists(self.file_template.format(self.label, i)):
-            i += 1
-        filename = self.file_template.format(self.label, i)
-
         controller.add_listener(listener)
         try:
             sys.stdin.readline()
@@ -45,10 +38,14 @@ class DataRecorder(object):
             # Remove the sample listener when done
             controller.remove_listener(listener)
 
+        # Create appropriate file
+        i = 0
+        while os.path.exists(self.file_template.format(self.label, i)):
+            i += 1
+        filename = self.file_template.format(self.label, i)
+
         with open(filename, 'w') as fp:
             json.dump(listener.get_data(), fp, indent=4, sort_keys=True)
-
-        # TODO insert code to either file generator or to classifier
 
     def begin_recording(self):
         while True:
@@ -58,4 +55,4 @@ class DataRecorder(object):
             except KeyboardInterrupt:
                 print('\nExiting')
                 break
-            self._record_()
+            self._record()

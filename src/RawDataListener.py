@@ -3,7 +3,6 @@ import numpy as np
 import os
 import sys
 import thread
-import time
 src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
 root_dir = os.path.abspath(os.path.join(src_dir, '../'))
 sys.path.insert(0, root_dir + '/lib')
@@ -59,7 +58,6 @@ class RawDataListener(Leap.Listener):
             hand_type = 'left' if hand.is_left else 'right'
 
             hand_data = {}
-            # hand_data['type'] = 'left' if hand.is_left else 'right'
             hand_data['id'] = hand.id
             hand_data['palm_pos'] = {}
             for p in zip(coords, hand.palm_normal):
@@ -97,7 +95,6 @@ class RawDataListener(Leap.Listener):
                 finger_type = self.finger_names[finger.type]
 
                 finger_data = {}
-                # finger_data['type'] = self.finger_names[finger.type]
                 finger_data['id'] = finger.id
                 finger_data['length'] = finger.length
                 finger_data['width'] = finger.width
@@ -109,7 +106,6 @@ class RawDataListener(Leap.Listener):
                     bone_type = self.bone_names[bone.type]
 
                     bone_data = {}
-                    # bone_data['type'] = self.bone_names[bone.type]
 
                     bone_data['prev_joint'] = {}
                     for p in zip(coords, bone.prev_joint):
@@ -129,7 +125,6 @@ class RawDataListener(Leap.Listener):
 
             frame_data['hands'][hand_type] = hand_data
 
-        # self.frames[frame.timestamp] = frame_data
         self.frames.append(frame_data)
 
     def get_data(self):

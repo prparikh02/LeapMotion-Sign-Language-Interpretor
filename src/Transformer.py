@@ -51,7 +51,7 @@ class Transformer(object):
         if 'filter' not in self.config:
             raise ValueError('Config map should include "filter."')
         opt = DataParserOpt(**self.config['filter'])
-        dr = DataReader(Constants.DEFAULT_MAPPING_FILE,
+        dr = DataReader(self.map_file,
                         self.data_file,
                         opt=opt)
         A, y = dr.extract_features()

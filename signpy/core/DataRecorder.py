@@ -2,8 +2,8 @@ import json
 import inspect
 import os
 import sys
-src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
-root_dir = os.path.abspath(os.path.join(src_dir, '../'))
+curr_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
+root_dir = os.path.abspath(os.path.join(curr_dir, '../'))
 sys.path.insert(0, root_dir + '/lib')
 import Leap
 from RawDataListener import RawDataListener
@@ -16,7 +16,7 @@ class DataRecorder(object):
 
     def __init__(self, config_fp=None, write_to_file=False):
         self.label = None
-        self.file_template = root_dir + '/samples/' + 'sample_{}_{}.json'
+        self.file_template = root_dir + '/../samples/' + 'sample_{}_{}.json'
 
     def _record(self):
         controller = Leap.Controller()

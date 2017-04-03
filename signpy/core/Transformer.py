@@ -17,11 +17,12 @@ class Transformer(object):
         if config_file:
             if not os.path.exists(config_file):
                 raise IOError('Could not find file {}'.format(config_file))
-            self.method = self._read_config_file
             self.config_file = config_file
             self._read_config_file()
         else:
-            self.method = self._manual_wizard()
+            # TODO: Implement manual wizard
+            self.config = self._manual_wizard()
+
         self.map_file = \
             feature_map if feature_map else Constants.DEFAULT_MAPPING_FILE
 
@@ -40,6 +41,7 @@ class Transformer(object):
         '''
         TODO:
         Walk user through transformation options
+        Return loaded self.config
         '''
         print('Manual config wizard is not yet implemented')
         return
@@ -62,7 +64,7 @@ class Transformer(object):
                 ds = DataSampler(A, y, method, method_args)
             except:
                 ds = DataSampler(A, y)
-                print('Sample structure has or method_args')
+                print('Sample structure has no method_args')
             A, y = ds.sample()
         if 'normalize' in self.config:
             nml = Normalizer()

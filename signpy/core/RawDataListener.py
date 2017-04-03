@@ -3,8 +3,8 @@ import numpy as np
 import os
 import sys
 import thread
-src_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
-root_dir = os.path.abspath(os.path.join(src_dir, '../'))
+curr_dir = os.path.dirname(inspect.getfile(inspect.currentframe()))
+root_dir = os.path.abspath(os.path.join(curr_dir, '../'))
 sys.path.insert(0, root_dir + '/lib')
 import Leap
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture

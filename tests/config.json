@@ -12,10 +12,5 @@
             "k": "",
             "N": 200
         }
-    },
-    "normalize": {
-        "methods": [
-            "affine_translation"
-        ]
     }
 }

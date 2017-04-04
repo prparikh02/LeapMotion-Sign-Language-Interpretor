@@ -2,18 +2,22 @@ import sys
 import time
 import zmq
 import random
+from Classifier import Classifier
 from signpy.core.Transformer import Transformer
 
 
 def transformer_pipe(T, cr):
+    model = './tests/my_model_convlstm.h5'
+    myClassifier = Classifier(model)
     while True:
         data = cr.recv_json()['data']
         start_time = time.time()
         A, y = T.transform(data)
-        # print('{}\n{}'.format(A, A.shape))
-        # print('{}\n{}'.format(y, y.shape))
+        A = A[:, 186:]
+        res = myClassifier.predict(A)
+        # TODO: INSERT NN
         print('Shape of data: {}'.format(A.shape))
-        print('Labels: {}'.format(y.shape))
+        print('Prediction: {}'.format(res))
         end_time = time.time()
         print('Time elapsed for processing: {}'.format(end_time - start_time))
 

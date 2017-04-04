@@ -1,7 +1,6 @@
 import time
 import zmq
 from multiprocessing import Process, Queue
-from signpy.core.Transformer import Transformer
 from signpy.streaming.StreamDataRecorder import StreamDataRecorder
 
 

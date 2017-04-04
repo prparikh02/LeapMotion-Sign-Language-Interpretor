@@ -14,7 +14,6 @@ class Normalizer(object):
     """
 
     def __init__(self, map_file=Constants.DEFAULT_MAPPING_FILE):
-        print map_file
         try:
             with open(map_file, 'r') as f:
                 feature_map = f.read()

@@ -61,7 +61,7 @@ class Transformer(object):
             try:
                 method = self.config['sample']['method']
                 method_args = self.config['sample']['method_args']
-                ds = DataSampler(A, y, method, method_args)
+                ds = DataSampler(A, y, method, **method_args)
             except Exception as e:
                 ds = DataSampler(A, y)
                 print('{} or\nSample structure has no method_args'.format(e))

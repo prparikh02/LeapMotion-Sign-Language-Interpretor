@@ -10,31 +10,27 @@ import Leap
 from Leap import CircleGesture, KeyTapGesture, ScreenTapGesture, SwipeGesture
 
 
-class RawDataListener(Leap.Listener):
-    """
-    This class reads data from the Leap and output a json file.
-    """
+class StreamRawDataListener(Leap.Listener):
 
     finger_names = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky']
     bone_names = ['Metacarpal', 'Proximal', 'Intermediate', 'Distal']
 
     def __init__(self):
-        super(RawDataListener, self).__init__()
+        super(StreamRawDataListener, self).__init__()
         self.frames = []
 
     def on_init(self, controller):
         print('RawDataListener Initialized')
 
     def on_connect(self, controller):
-        print('RawDataListener Connected.\n' +
-              'Press ENTER to finish recording sample.')
+        print('RawDataListener Connected.')
 
     def on_disconnect(self, controller):
         # Note: not dispatched when running in a debugger.
         print('RawDataListener Disconnected')
 
     def on_exit(self, controller):
-        print('RawDataListener Exited')
+        print('RawDataListener Exited\n')
 
     def on_frame(self, controller):
         # TODO: Outsource this code to a dedicated writer Function

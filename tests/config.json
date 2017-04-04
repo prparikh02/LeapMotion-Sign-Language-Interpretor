@@ -7,10 +7,10 @@
         "both": true
     },
     "sample": {
-        "method": "uniform_rate",
+        "method": "uniform_number",
         "method_args": {
-            "k": 2,
-            "N": ""
+            "k": "",
+            "N": 200
         }
     },
     "normalize": {

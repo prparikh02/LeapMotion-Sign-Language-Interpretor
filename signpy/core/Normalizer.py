@@ -1,6 +1,6 @@
-import Constants
 import numpy as np
 import re
+from .. import Constants
 
 
 class Normalizer(object):
@@ -13,7 +13,19 @@ class Normalizer(object):
     X_norm = my_norm.affine(X, out_file)
     """
 
-    def affine_translation(self, X, map_file=Constants.DEFAULT_MAPPING_FILE):
+    def __init__(self, map_file=Constants.DEFAULT_MAPPING_FILE):
+        print map_file
+        try:
+            with open(map_file, 'r') as f:
+                feature_map = f.read()
+                self.features = \
+                    [feat.strip() for feat in feature_map.splitlines()]
+        except IOError:
+            print('Could not find or open map file.')
+            raise
+
+
+    def affine_translation(self, X):
         """
         Performs affine translation of the hand coordinates by centering the
             palm at the origin.
@@ -24,14 +36,7 @@ class Normalizer(object):
             X_aff: affinely translation of the input array, X
         """
 
-        try:
-            with open(map_file, 'r') as f:
-                feature_map = f.read()
-        except IOError:
-            print('Could not find or open map file.')
-            raise
-
-        features = [feat.strip() for feat in feature_map.splitlines()]
+        features = self.features
 
         palm_template = 'frame.hands.{}.palm_pos.{}'
         hands = ['left', 'right']
@@ -41,7 +46,7 @@ class Normalizer(object):
 
         pos_pattern = re.compile("^.*(\.[x-z])$")
         for idx, feat in enumerate(features):
-            # discount non-positional (x,y,z)features
+            # discount non-positional (x,y,z) features
             if not pos_pattern.match(feat.strip()):
                 continue
             pos_bins[feat[-1]].append(idx)

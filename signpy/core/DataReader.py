@@ -1,9 +1,8 @@
-import Constants
 import json
 import numpy as np
 import operator
 import pdb
-
+from .. import Constants
 
 """
 Sample usage:
@@ -22,16 +21,16 @@ class DataReader(object):
     Class that parse json file to numpy array, with some options
     Arguments:
     map_file: text file that defines the dictionary structure
-    data_file: json data file
+    data: json data file
     Assume responsibility of caller to specify options
     If no option object is specified, then extract_features returns raw matrix.
     """
 
-    def __init__(self, map_file, data_file, opt=None):
+    def __init__(self, map_file, data, opt=None):
         self.A = np.zeros((1, 1))  # feature matrix
         self.y = np.zeros((1, 1))  # labels column vector
         self.map_file = map_file
-        self.data_file = data_file
+        self.data = data
         self.opt = opt
 
     def _filter(self, nnz_idx, A, y):
@@ -63,9 +62,15 @@ class DataReader(object):
         with open(self.map_file) as f:
             feature_list = f.read().splitlines()
 
-        # open JSON data in nested dictionary, D
-        with open(self.data_file) as f:
-            D = json.load(f)
+        # open JSON data in nested dictionary, D if self.data is filepath
+        #   otherwise self.data is already list of frames
+        if isinstance(self.data, basestring):
+            with open(self.data) as f:
+                D = json.load(f)
+                self.from_file = True
+        else:
+            D = self.data
+            self.from_file = False
 
         # get number of frames and features
         num_frames = len(D)
@@ -86,7 +91,7 @@ class DataReader(object):
                 try:
                     val = reduce(operator.getitem, feat_keys, frame)
                     A[frame_idx, feat_idx] = val
-                    y[frame_idx] = frame['label']
+                    y[frame_idx] = frame['label'] if self.from_file else None
                 except KeyError, e:
                     pass
 

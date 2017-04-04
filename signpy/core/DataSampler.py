@@ -1,7 +1,7 @@
 from __future__ import division
-import Constants
 import numpy as np
 from types import *
+from .. import Constants
 
 
 class DataSampler(object):
@@ -44,9 +44,10 @@ class DataSampler(object):
         """
         num_frames = self.data.shape[0]
         if not N:
-            k = int(np.floor(
+            N = int(np.floor(
                 Constants.DEFAULT_SAMPLE_PERCENTAGE * num_frames
             ))
+            k = int(np.floor(num_frames / N))
             if k == 0:
                 k = 1
         elif N > num_frames:

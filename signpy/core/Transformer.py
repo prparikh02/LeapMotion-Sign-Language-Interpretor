@@ -1,10 +1,10 @@
-import Constants
 import json
 import numpy as np
 import os.path
 from DataReader import DataReader, DataParserOpt
 from DataSampler import DataSampler
 from Normalizer import Normalizer
+from .. import Constants
 
 
 class Transformer(object):
@@ -54,7 +54,7 @@ class Transformer(object):
             raise ValueError('Config map should include "filter."')
         opt = DataParserOpt(**self.config['filter'])
         dr = DataReader(self.map_file,
-                        self.data_file,
+                        self.data,
                         opt=opt)
         A, y = dr.extract_features()
         if 'sample' in self.config:
@@ -62,22 +62,26 @@ class Transformer(object):
                 method = self.config['sample']['method']
                 method_args = self.config['sample']['method_args']
                 ds = DataSampler(A, y, method, method_args)
-            except:
+            except Exception as e:
                 ds = DataSampler(A, y)
-                print('Sample structure has no method_args')
+                print('{} or\nSample structure has no method_args'.format(e))
             A, y = ds.sample()
         if 'normalize' in self.config:
-            nml = Normalizer()
+            nml = Normalizer(map_file=self.map_file)
             for method_str in self.config['normalize']['methods']:
                 method = getattr(nml, method_str)
-                A = method(A, map_file=self.map_file)
+                A = method(A)
         return A, y
 
-    def transform(self, raw_data_file):
+    def transform(self, data):
         '''
         Take in raw data file as input and apply transformations
         '''
-        if not os.path.exists(raw_data_file):
-            raise IOError('Could not find file {}'.format(raw_data_file))
-        self.data_file = raw_data_file
+
+        # data could be a filepath to json data or actual list of frames
+        if isinstance(data, basestring):
+            if not os.path.exists(data):
+                raise IOError('Could not find file {}'.format(data))
+
+        self.data = data
         return self._apply()

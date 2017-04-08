@@ -1,4 +1,5 @@
 import numpy as np
+import numpy.matlib
 import keras
 from keras.models import load_model
 import string
@@ -39,6 +40,13 @@ class Classifier():
         This function slides window on the input, calls __predict__,
         returns the prediction
         """
+
+        if X is None or X.shape[0] == 0:
+            print('no hands detected')
+        if X.shape[0] < 200:
+            remaining = 200 - X.shape[0]
+            L = X[-1, :]
+            X = np.append(X, np.matlib.repmat(L, remaining, 1), axis=0)
 
         return self.__predict__(X[np.newaxis, :, :])
         # result = []

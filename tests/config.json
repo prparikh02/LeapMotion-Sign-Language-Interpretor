@@ -10,7 +10,7 @@
         "method": "uniform_number",
         "method_args": {
             "k": "",
-            "N": 200
+            "N": 100
         }
     }
 }

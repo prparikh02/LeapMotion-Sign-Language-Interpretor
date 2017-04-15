@@ -30,7 +30,7 @@ class StreamRawDataListener(Leap.Listener):
         print('RawDataListener Disconnected')
 
     def on_exit(self, controller):
-        print('RawDataListener Exited\n')
+        print('RawDataListener Exited')
 
     def on_frame(self, controller):
         # TODO: Outsource this code to a dedicated writer Function

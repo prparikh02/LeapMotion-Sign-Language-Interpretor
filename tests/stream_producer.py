@@ -9,7 +9,7 @@ def producer():
     zmq_socket = context.socket(zmq.PUSH)
     zmq_socket.connect('tcp://127.0.0.1:5559')
     # Start your result manager and workers before you start your producers
-    sdr = StreamDataRecorder(socket=zmq_socket)
+    sdr = StreamDataRecorder(comm=zmq_socket)
     sdr.begin_recording()
 
 if __name__ == '__main__':

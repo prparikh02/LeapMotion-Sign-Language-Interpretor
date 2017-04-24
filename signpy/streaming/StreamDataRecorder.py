@@ -12,8 +12,8 @@ from Classifier import Classifier
 from ..core.Transformer import Transformer
 
 
-# to be used with stream_serial.py
 def transformer_pipe(T, classifier, data):
+    ''' to be used with serial streaming '''
     start_time = time.time()
     A, y = T.transform(data)
     print('time elapsed (transformation): {}'.format(time.time() - start_time))
@@ -24,7 +24,6 @@ def transformer_pipe(T, classifier, data):
     print('Shape of data: {}'.format(A.shape))
     print('Prediction: {}'.format(res))
     print('time elapsed (prediction): {}'.format(time.time() - start_time))
-    sys.stdout.flush()
 
 
 class StreamDataRecorder(object):
@@ -42,7 +41,7 @@ class StreamDataRecorder(object):
         model = './signpy/streaming/my_model_convlstm.h5'
         self.classifier = Classifier(model)
 
-    def _record(self, interval=3):
+    def _record(self, interval=3.5):
         terminate = False
         listener = StreamRawDataListener()
         self.controller.add_listener(listener)

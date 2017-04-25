@@ -12,7 +12,7 @@ from Classifier import Classifier
 from ..core.Transformer import Transformer
 
 
-def transformer_pipe(T, classifier, data):
+def transformer_pipe(T, classifier, data, comm):
     ''' to be used with serial streaming '''
     start_time = time.time()
     A, y = T.transform(data)
@@ -21,6 +21,7 @@ def transformer_pipe(T, classifier, data):
     # TODO: Remove left hand features in transformer
     A = A[:, 186:]
     res = classifier.predict(A)
+    comm.send(res)
     print('Shape of data: {}'.format(A.shape))
     print('Prediction: {}'.format(res))
     print('time elapsed (prediction): {}'.format(time.time() - start_time))
@@ -73,7 +74,7 @@ class StreamDataRecorder(object):
                 # })
                 # to be used with stream_multiprocess.py
                 # self.comm.send(data)
-                transformer_pipe(self.T, self.classifier, data)
+                transformer_pipe(self.T, self.classifier, data, self.comm)
                 if terminate:
                     break
             except KeyboardInterrupt:

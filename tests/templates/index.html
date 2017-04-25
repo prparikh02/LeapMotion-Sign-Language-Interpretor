@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <script src="/static/js/jquery-3.2.1.min.js"></script>
+    <script src="/static/js/renderjson.js"></script>
+</head>
+
+<body>
+    Hello There
+    <input id="startBtn" type="button" value="Start" onclick="fire_request();" />
+    <div id="output"></div>
+    <script>
+        function fire_request() {
+            renderjson.set_icons('++', '--');
+            renderjson.set_show_to_level(1);
+            $.ajax({
+                url: '/poll',
+                dataType: 'json',
+                success: function (data) {
+                    console.log(data);
+                    // $('#output').empty();
+                    $('#output').append(renderjson(data));
+                    fire_request();
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

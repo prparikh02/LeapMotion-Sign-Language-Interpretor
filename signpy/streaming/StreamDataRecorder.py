@@ -39,7 +39,10 @@ class StreamDataRecorder(object):
         ''' to be used with stream_serial.py '''
         self.T = Transformer(config_file='./tests/config.json',
                              feature_map='./tests/mapping.txt')
-        model = './signpy/streaming/my_model_convlstm.h5'
+        # model = './signpy/streaming/my_model_convlstm.h5'  # tensorflow 0.12
+        model = './signpy/streaming/0_normalized.h5'
+        # model = './signpy/streaming/1_normalized.h5'
+        # model = './signpy/streaming/0.h5'
         self.classifier = Classifier(model)
 
     def _record(self, interval=3.5):

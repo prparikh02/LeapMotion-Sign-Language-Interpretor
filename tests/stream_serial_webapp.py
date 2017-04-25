@@ -13,8 +13,7 @@ def poll():
     if isinstance(p, str):
         p = {'message': p}
     else:
-        p = {k: str(v) for k, v in p}
-    print p
+        p = {str(v): str(k) for k, v in p}
     return jsonify(p)
 
 @app.route('/')

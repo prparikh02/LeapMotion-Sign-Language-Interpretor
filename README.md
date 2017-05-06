@@ -35,4 +35,7 @@ If you are interested in the conversion from json to these npy please take a loo
 The training happens in *signpy/core/RNN.py*, where it performs 5 fold cross validation on the whole dataset and outputs a model file. This model file can be loaded later for real-time classification. It also outputs a history file that records the accuracy in each fold.
 
 ## Real time module
-TODO: fill this part
+
+The data recording module is combined a basic user interface through the Flask framework. To run a real time streaming module on a trained classifier, use the following script: `stream_serial_webapp.py` found in `LeapMotion-Sign-Language-Interpretor/tests/`. This file serves as a main method which stitches a streaming object (from `signpy.streaming.StreamDataRecorder/StreamDataRecorder` with a Flask server through the Multiprocessing python module.
+
+Point your browser to the localhost to view an automatically updated probability distribution of the predictions. The default time window is 3 seconds to make a prediction. This parameter can be modified in the _record() method within `StreamDataRecorder`. `stream_serial_webapp.py` should be modified to take in a default interval parameter.

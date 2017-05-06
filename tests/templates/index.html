@@ -58,7 +58,14 @@
                             label: 'Percentage certainty in letter prediction',
                             fillColor: '#382765',
                             data: probabilities
-                        }]
+                        }],
+                        scales: {
+                            xAxes: [{
+                                ticks: {
+                                    fontSize: 200
+                                }
+                            }]
+                        }
                     };
                     var context = document.getElementById('display').getContext('2d');
                     var UIChart = new Chart(context).Bar(barData);

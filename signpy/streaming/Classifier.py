@@ -8,11 +8,16 @@ import string
 indxToChar = dict(zip(range(27), string.ascii_lowercase))
 charToIndx = dict(zip(string.ascii_lowercase, range(27)))
 
+x_indx = range(0, 183, 3)
+y_indx = range(1, 183, 3)
+z_indx = range(2, 183, 3)
+
 
 class Classifier():
     """
     TODO: docstring
     """
+
     def __init__(self, model):
         """
         :param model: path to .h5 file
@@ -33,7 +38,6 @@ class Classifier():
         char = [indxToChar[i] for i in indx.tolist()[:5]]
         return list(zip(char, result[indx][:5]))
 
-
     def predict(self, X, windows_size=200, batchsize=32):
         """
         :param X: input data
@@ -51,5 +55,12 @@ class Classifier():
             remaining = 200 - X.shape[0]
             L = X[-1, :]
             X = np.append(X, np.matlib.repmat(L, remaining, 1), axis=0)
+        print X.shape
+        x_palm = X[:, 180]
+        y_palm = X[:, 181]
+        z_palm = X[:, 182]
+        X[:, x_indx] -= x_palm[:, np.newaxis]
+        X[:, y_indx] -= y_palm[:, np.newaxis]
+        X[:, z_indx] -= z_palm[:, np.newaxis]
 
         return self._predict(X[np.newaxis, :, :])

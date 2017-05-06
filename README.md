@@ -9,7 +9,7 @@ The repository contains the following modules:
   * Recurrent neural network: further processing data as well as the network architecture.
   * Real time module: code that facilitates the real time working of the system, including streaming, classifying, and user interface.
 
-# Data recording
+## Data recording
 To start recording, navigate to root folder `LeapMotion-Sign-Language-Interpretor`, start an ipython shell, then
 
 ```python
@@ -22,10 +22,10 @@ myrecorder.begin_recording()
 
 Then *Enter* to begin. You would have to input a letter label, then it will start recording. The output json file is stored in the *samples* folder.
 
-# Transformer
+## Transformer
 TODO: fill something here
 
-# RNN
+## RNN
 The formated data (in .npy format) used in the training can be found in the link below:
 data: https://drive.google.com/open?id=0BwXFTV4JYj9rYXFYSW44aDNLcW8
 label: https://drive.google.com/open?id=0BwXFTV4JYj9rQWE1dHB5ZjRuVTA
@@ -34,5 +34,5 @@ If you are interested in the conversion from json to these npy please take a loo
 
 The training happens in *signpy/core/RNN.py*, where it performs 5 fold cross validation on the whole dataset and outputs a model file. This model file can be loaded later for real-time classification. It also outputs a history file that records the accuracy in each fold.
 
-# Real time module
+## Real time module
 TODO: fill this part

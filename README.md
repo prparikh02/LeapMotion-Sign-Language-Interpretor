@@ -27,9 +27,10 @@ TODO: fill something here
 
 ## RNN
 The formated data (in .npy format) used in the training can be found in the link below:
-data: https://drive.google.com/open?id=0BwXFTV4JYj9rYXFYSW44aDNLcW8
-label: https://drive.google.com/open?id=0BwXFTV4JYj9rQWE1dHB5ZjRuVTA
 
+data: https://drive.google.com/file/d/0BwXFTV4JYj9rQWE1dHB5ZjRuVTA/view?usp=sharing&resourcekey=0-iNimKtQkWp5G14tt2_dBOg
+
+label: https://drive.google.com/file/d/0BwXFTV4JYj9rQWE1dHB5ZjRuVTA/view?usp=sharing&resourcekey=0-iNimKtQkWp5G14tt2_dBOg
 If you are interested in the conversion from json to these npy please take a look at *signpy/core/data_partition.ipynb*.
 
 The training happens in *signpy/core/RNN.py*, where it performs 5 fold cross validation on the whole dataset and outputs a model file. This model file can be loaded later for real-time classification. It also outputs a history file that records the accuracy in each fold.
